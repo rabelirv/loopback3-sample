@@ -3,40 +3,32 @@ import PropTypes from 'prop-types';
 import { Container, Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'mdbreact';
 import UserService from '../services/UserService';
 
-class SignUpModalComponent extends React.Component {
+
+class LoginModalComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: true,
       form: {
-        firstName: 'Aslam',
-        lastName: 'Test',
         email: 'jaslam.test@gmail.com',
         password: 'Password123',
       },
     };
-
   };
 
-  // componentDidMount() {
-  //   this.toggle();
-  // }
+  componentDidMount() {
+    this.toggle();
+  }
 
   // componentWillUnmount() {
   //   this.setState({ modal: false });
   // }
 
+
   toggle = () => {
     this.setState({ modal: !this.state.modal });
   };
 
-  onFirstNameChange = (event) => {
-    this.setState({ form: { ...this.state.form, firstName: event.target.value } });
-  }
-
-  onLastNameChange = (event) => {
-    this.setState({ form: { ...this.state.form, lastName: event.target.value } });
-  }
 
   onEmailChange = (event) => {
     this.setState({ form: { ...this.state.form, email: event.target.value } });
@@ -46,7 +38,7 @@ class SignUpModalComponent extends React.Component {
     this.setState({ form: { ...this.state.form, password: event.target.value } });
   }
 
-  loginNewUser = ()=>{
+  onLoginClick = (userObj) => {
     let response = (new UserService()).login(
       this.state.form.email,
       this.state.form.password,
@@ -61,45 +53,20 @@ class SignUpModalComponent extends React.Component {
       console.log('error: ' + JSON.stringify(error));
     });
     this.props.checkAuth()
-  }
-
-  onSignupClick = () => {
-    let response = (new UserService()).signup(
-      this.state.form.firstName,
-      this.state.form.lastName,
-      this.state.form.email,
-      this.state.form.password,
-    );
-
-    response.then((user) => {
-      console.log('user: ' + JSON.stringify(user));
-      this.toggle();
-    })
-    .then(this.loginNewUser())
-    .catch((error) => {
-      console.log('error: ' + JSON.stringify(error));
-    });
-
   };
 
+
   render() {
-   console.log(this.state.form.firstName);
     return (
       <Container>
         {/*<Button onClick={this.toggle}>Sign-up</Button> */}
         <Modal isOpen={this.state.modal} toggle={this.toggle} centered>
           <ModalHeader toggle={this.toggle}>
-            <strong>Sign-up</strong>
+            <strong>Login</strong>
           </ModalHeader>
 
           <ModalBody>
             <form>
-              <label htmlFor="FirstName" className="grey-text">First name</label>
-              <input type="text" id="FirstName" className="form-control" value={this.state.form.firstName} onChange={ this.onFirstNameChange } />
-              <br/>
-              <label htmlFor="LastName" className="grey-text">Last name</label>
-              <input type="text" id="LastName" className="form-control" value={this.state.form.lastName} onChange={ this.onLastNameChange } />
-              <br/>
               <label htmlFor="Email" className="grey-text">Email</label>
               <input type="email" id="Email" className="form-control" value={this.state.form.email} onChange={ this.onEmailChange } />
               <br/>
@@ -111,7 +78,7 @@ class SignUpModalComponent extends React.Component {
 
           <ModalFooter>
             <Button color="secondary" onClick={this.toggle}>Cancel</Button>{' '}
-            <Button color="primary" onClick={this.onSignupClick}>Sign-up</Button>
+            <Button color="primary" onClick={()=>this.onLoginClick(this.state.form)}>Login</Button>
           </ModalFooter>
         </Modal>
       </Container>
@@ -119,8 +86,8 @@ class SignUpModalComponent extends React.Component {
   }
 }
 
-SignUpModalComponent.propTypes = {
+LoginModalComponent.propTypes = {
   show: PropTypes.bool
 };
 
-export default SignUpModalComponent;
+export default LoginModalComponent
